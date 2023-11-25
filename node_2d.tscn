@@ -1,0 +1,82 @@
+[gd_scene load_steps=15 format=3 uid="uid://5f5uhnskphmk"]
+
+[ext_resource type="Texture2D" uid="uid://bh3dj1dlrc733" path="res://sprites/grasstile5-Sheet.png" id="1_1gv4k"]
+[ext_resource type="Script" path="res://Cursor.gd" id="2_mmgio"]
+[ext_resource type="Script" path="res://Character.gd" id="2_orlut"]
+[ext_resource type="Texture2D" uid="uid://dcqktjylt20g2" path="res://sprites/cursor.png" id="3_w56al"]
+[ext_resource type="Script" path="res://AnimatedSprite2D.gd" id="4_vejum"]
+[ext_resource type="Texture2D" uid="uid://dq5dwv0v4oxbh" path="res://sprites/knight.png" id="5_e00kp"]
+[ext_resource type="Script" path="res://Pathfinding.gd" id="7_tpcjv"]
+[ext_resource type="Script" path="res://PriorityQueue.gd" id="8_ghsgt"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jnvse"]
+texture = ExtResource("1_1gv4k")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_4den7"]
+tile_size = Vector2i(64, 64)
+sources/0 = SubResource("TileSetAtlasSource_jnvse")
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_6hxa4"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_lc3ap"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_e00kp")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ms5fv"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_04mv1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_w56al")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Main" type="Node2D"]
+
+[node name="theGrid" type="TileMap" parent="."]
+rotation = 0.0074466
+tile_set = SubResource("TileSet_4den7")
+cell_quadrant_size = 64
+format = 2
+layer_0/tile_data = PackedInt32Array(65537, 65536, 0, 0, 0, 0, 1, 393216, 0, 65536, 0, 0, 131073, 262144, 0, 65538, 262144, 0, 131074, 262144, 0, 3, 393216, 0, 2, 393216, 0, 131072, 196608, 0, 65539, 262144, 0, 131075, 262144, 0, 196608, 65536, 0, 196609, 0, 0, 196610, 393216, 0, 196611, 393216, 0, 196612, 0, 0, 196613, 196608, 0, 196614, 393216, 0, 196615, 393216, 0, 196616, 0, 0, 196617, 65536, 0, 262153, 262144, 0, 327689, 0, 0, 327688, 196608, 0, 327687, 65536, 0, 262144, 0, 0, 327680, 131072, 0, 262145, 196608, 0, 327681, 0, 0, 262146, 0, 0, 327682, 65536, 0, 262147, 0, 0, 327683, 262144, 0, 4, 393216, 0, 65540, 262144, 0, 131076, 65536, 0, 262148, 262144, 0, 327684, 196608, 0, 5, 327680, 0, 65541, 0, 0, 131077, 0, 0, 262149, 131072, 0, 327685, 0, 0, 6, 262144, 0, 65542, 262144, 0, 131078, 65536, 0, 262150, 196608, 0, 327686, 262144, 0, 7, 65536, 0, 65543, 262144, 0, 131079, 65536, 0, 262151, 196608, 0, 8, 262144, 0, 65544, 0, 0, 131080, 65536, 0, 262152, 196608, 0, 9, 262144, 0, 65545, 65536, 0, 131081, 196608, 0)
+
+[node name="Character" type="Node2D" parent="." groups=["Characters"]]
+script = ExtResource("2_orlut")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Character"]
+material = SubResource("CanvasItemMaterial_6hxa4")
+sprite_frames = SubResource("SpriteFrames_lc3ap")
+
+[node name="Cursor" type="Node2D" parent="."]
+script = ExtResource("2_mmgio")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Cursor"]
+material = SubResource("CanvasItemMaterial_ms5fv")
+sprite_frames = SubResource("SpriteFrames_04mv1")
+offset = Vector2(-16, 15)
+script = ExtResource("4_vejum")
+
+[node name="Pathfinding" type="Node" parent="."]
+script = ExtResource("7_tpcjv")
+
+[node name="PriorityQueue" type="Node" parent="."]
+script = ExtResource("8_ghsgt")
