@@ -23,7 +23,6 @@ func _process(_delta):
 		if selected_char==null:
 			select_character_at_cursor()
 		else:
-			print("attempting move to ", tilemap.local_to_map(position))
 			try_move_selected_character(tilemap.map_to_local(position))
 
 func _handle_input_movement():
@@ -53,18 +52,19 @@ func try_move_selected_character(target):
 	var empty_cell = true
 	var cursor_position = tilemap.local_to_map(position)  # Read the cursor position
 	print(cursor_position)
-	var characters = get_tree().get_nodes_in_group("Characters")
 	if selected_char != null:
-		for character in characters:
-			if character.isSelected != true && tilemap.local_to_map(character.position) == cursor_position:
-				empty_cell = false
-				break
+		if check_empty_cell(cursor_position)==true:
+			selected_char.move_to(cursor_position)
+			selected_char=null	
 		
-	if empty_cell:
-		selected_char.move_to(cursor_position)
-		selected_char=null	
-	
-	
+func check_empty_cell(target):
+	var characters = get_tree().get_nodes_in_group("Characters")
+	for character in characters:
+		if tilemap.local_to_map(character.position) == target:
+			return false
+		else:
+			return true
+			
 func select_character_at_cursor() -> void:
 	var cursor_cell = tilemap.local_to_map(global_position)  # Get the cell coordinates of the cursor
 

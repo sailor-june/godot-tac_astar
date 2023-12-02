@@ -7,7 +7,7 @@ var isSelected = false
 @onready var grid = get_node("/root/Main/theGrid")
 var current_id_path: Array[Vector2i]
 var current_path_index=0
-var movePoint = Vector2i.ZERO
+
 
 func _ready() -> void:
 	
@@ -27,14 +27,17 @@ func _ready() -> void:
 			)
 			
 			var tile_data = grid.get_cell_tile_data(0, tile_position)
-			
+			var terrain_cost = tile_data.get_custom_data("Cost")
+			if terrain_cost != null:
+				astargrid.set_point_weight_scale(tile_position, terrain_cost)
 			if tile_data == null or tile_data.get_custom_data("walkable")==false:
 				astargrid.set_point_solid(tile_position)
 		
 	
 	#center yourself (-_-)
+	position = grid.local_to_map(position)
 	position = grid.map_to_local(position)
-	movePoint = position
+	
 	
 	
 func _physics_process(delta):
@@ -50,15 +53,15 @@ func _physics_process(delta):
 func move_to(target: Vector2) -> void:
 	
 	var id_path = astargrid.get_id_path(grid.local_to_map(position), target).slice(1)
-	print(target)
-	print("ID PATH ", id_path)
-	
+	print("ID PATH :")
+	for step in id_path:
+		print("step: ", step, "cost: ", astargrid.get_point_weight_scale(step))
 		
 	if current_id_path.is_empty():
-		print('adding path')
+	
 		current_id_path = id_path
 
 func set_selected(value: bool) -> void:
 	isSelected = value
+			
 	print("Selected:", name,  isSelected)
-

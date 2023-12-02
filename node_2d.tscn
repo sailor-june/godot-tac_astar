@@ -1,57 +1,89 @@
-[gd_scene load_steps=17 format=3 uid="uid://5f5uhnskphmk"]
+[gd_scene load_steps=20 format=3 uid="uid://5f5uhnskphmk"]
 
 [ext_resource type="Texture2D" uid="uid://bh3dj1dlrc733" path="res://sprites/grasstile5-Sheet.png" id="1_1gv4k"]
-[ext_resource type="Texture2D" uid="uid://j2chhrvgu0io" path="res://sprites/grasstile5-Sheet1.png" id="2_b1hmo"]
+[ext_resource type="Texture2D" uid="uid://c3gk7p688hv8e" path="res://sprites/water-sheet.png" id="1_vs51o"]
 [ext_resource type="Script" path="res://Cursor.gd" id="2_mmgio"]
 [ext_resource type="Script" path="res://Character.gd" id="2_orlut"]
+[ext_resource type="Script" path="res://enemy.gd" id="3_b3x52"]
+[ext_resource type="Texture2D" uid="uid://b1xde5yrajtxi" path="res://sprites/satan.png" id="3_t7qe6"]
 [ext_resource type="Texture2D" uid="uid://dcqktjylt20g2" path="res://sprites/cursor.png" id="3_w56al"]
 [ext_resource type="Script" path="res://AnimatedSprite2D.gd" id="4_vejum"]
 [ext_resource type="Texture2D" uid="uid://dq5dwv0v4oxbh" path="res://sprites/knight.png" id="5_e00kp"]
 [ext_resource type="Script" path="res://Pathfinding.gd" id="7_tpcjv"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jnvse"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_klps5"]
+texture = ExtResource("1_vs51o")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+8:0/0 = 0
+9:0/0 = 0
+10:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0vmy4"]
 texture = ExtResource("1_1gv4k")
 texture_region_size = Vector2i(64, 64)
 0:0/0 = 0
-0:0/0/custom_data_0 = true
 1:0/0 = 0
 1:0/0/custom_data_0 = true
+1:0/0/custom_data_1 = 2.0
 2:0/0 = 0
 2:0/0/custom_data_0 = true
+2:0/0/custom_data_1 = 2.0
 3:0/0 = 0
 3:0/0/custom_data_0 = true
+3:0/0/custom_data_1 = 2.0
 4:0/0 = 0
 4:0/0/custom_data_0 = true
+4:0/0/custom_data_1 = 3.0
 5:0/0 = 0
 5:0/0/custom_data_0 = true
+5:0/0/custom_data_1 = 3.0
 6:0/0 = 0
 6:0/0/custom_data_0 = true
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_axsmq"]
-texture = ExtResource("2_b1hmo")
-texture_region_size = Vector2i(64, 64)
-0:0/0 = 0
-1:0/0 = 0
-1:0/0/custom_data_0 = true
-2:0/0 = 0
-2:0/0/custom_data_0 = true
-3:0/0 = 0
-3:0/0/custom_data_0 = true
-4:0/0 = 0
-4:0/0/custom_data_0 = true
-5:0/0 = 0
-5:0/0/custom_data_0 = true
-6:0/0 = 0
-6:0/0/custom_data_0 = true
+6:0/0/custom_data_1 = 1.0
 7:0/0 = 0
 7:0/0/custom_data_0 = true
+7:0/0/custom_data_1 = 1.0
+8:0/0 = 0
+9:0/0 = 0
+9:0/0/custom_data_0 = true
+9:0/0/custom_data_1 = 1.0
+10:0/0 = 0
+10:0/0/custom_data_0 = true
+10:0/0/custom_data_1 = 1.0
+11:0/0 = 0
+11:0/0/custom_data_0 = true
+11:0/0/custom_data_1 = 1.0
+12:0/0 = 0
+12:0/0/custom_data_0 = true
+12:0/0/custom_data_1 = 1.0
 
 [sub_resource type="TileSet" id="TileSet_4den7"]
 tile_size = Vector2i(64, 64)
 custom_data_layer_0/name = "walkable"
 custom_data_layer_0/type = 1
-sources/0 = SubResource("TileSetAtlasSource_jnvse")
-sources/1 = SubResource("TileSetAtlasSource_axsmq")
+custom_data_layer_1/name = "Cost"
+custom_data_layer_1/type = 3
+sources/1 = SubResource("TileSetAtlasSource_klps5")
+sources/2 = SubResource("TileSetAtlasSource_0vmy4")
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2e5gl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_t7qe6")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_6hxa4"]
 
@@ -121,12 +153,11 @@ script/source = "extends Node#class PriorityQueue:
 [node name="Main" type="Node2D"]
 
 [node name="theGrid" type="TileMap" parent="."]
-position = Vector2(-1, 0)
-rotation = 0.0074466
+position = Vector2(1, 0)
 tile_set = SubResource("TileSet_4den7")
 cell_quadrant_size = 64
 format = 2
-layer_0/tile_data = PackedInt32Array(65537, 65536, 0, 0, 0, 0, 1, 393216, 0, 65536, 0, 0, 131073, 262144, 0, 65538, 262144, 0, 131074, 262144, 0, 3, 393216, 0, 2, 393216, 0, 131072, 196608, 0, 65539, 262144, 0, 131075, 262144, 0, 196608, 65536, 0, 196609, 0, 0, 196610, 393216, 0, 196611, 393216, 0, 196612, 0, 0, 196613, 196608, 0, 196614, 393216, 0, 196615, 393216, 0, 196616, 0, 0, 196617, 65536, 0, 262153, 262144, 0, 327689, 0, 0, 327688, 196608, 0, 327687, 65536, 0, 262144, 0, 0, 327680, 131072, 0, 262145, 196608, 0, 327681, 0, 0, 262146, 0, 0, 327682, 65536, 0, 262147, 0, 0, 327683, 262144, 0, 4, 393216, 0, 65540, 262144, 0, 131076, 65536, 0, 262148, 262144, 0, 327684, 196608, 0, 5, 327680, 0, 262149, 131072, 0, 327685, 0, 0, 6, 262144, 0, 65542, 262144, 0, 131078, 65536, 0, 262150, 196608, 0, 327686, 262144, 0, 7, 65536, 0, 65543, 262144, 0, 131079, 65536, 0, 262151, 196608, 0, 8, 262144, 0, 65544, 0, 0, 131080, 65536, 0, 262152, 196608, 0, 9, 262144, 0, 65545, 65536, 0, 131081, 196608, 0, 65541, 1, 0, 131077, 1, 0)
+layer_0/tile_data = PackedInt32Array(6, 131074, 0, 7, 65538, 0, 8, 131074, 0, 9, 131074, 0, 10, 196610, 0, 65546, 65538, 0, 131082, 131074, 0, 196618, 65538, 0, 262154, 131074, 0, 327690, 131074, 0, 393226, 131074, 0, 458762, 131074, 0, 524298, 65538, 0, 589834, 196610, 0, 589833, 131074, 0, 589832, 65537, 0, 589831, 524289, 0, 589830, 524289, 0, 589829, 524289, 0, 589828, 524289, 0, 589827, 524289, 0, 589826, 65537, 0, 589825, 196610, 0, 589824, 196610, 0, 524288, 65538, 0, 458752, 65538, 0, 393216, 196610, 0, 327680, 196610, 0, 262144, 196610, 0, 196608, 65538, 0, 131072, 65538, 0, 65536, 65538, 0, 65540, 327681, 0, 65539, 327681, 0, 65538, 524289, 0, 65537, 196610, 0, 131073, 196610, 0, 196609, 65538, 0, 262145, 131074, 0, 327681, 131074, 0, 393217, 131074, 0, 458753, 196610, 0, 524289, 196610, 0, 524290, 655361, 0, 458754, 655361, 0, 393218, 2, 0, 196610, 655361, 0, 131074, 655361, 0, 393219, 131074, 0, 458755, 131074, 0, 524291, 131074, 0, 524292, 65538, 0, 65542, 327681, 0, 524293, 196610, 0, 524294, 131074, 0, 65543, 327681, 0, 65544, 524289, 0, 131080, 655361, 0, 458760, 655361, 0, 458759, 65538, 0, 524295, 196610, 0, 524296, 655361, 0, 524297, 196610, 0, 458761, 65538, 0, 393225, 196610, 0, 327689, 196610, 0, 262153, 65538, 0, 196617, 131074, 0, 131081, 196610, 0, 65545, 196610, 0, 327685, 65538, 0, 262151, 196610, 0, 327687, 327682, 0, 327686, 786434, 0, 262150, 393218, 0, 262149, 458754, 0, 262146, 655361, 0, 327682, 2, 0, 131079, 196610, 0, 196616, 655361, 0, 393224, 524290, 0, 393220, 655362, 0, 327683, 262146, 0, 131075, 131074, 0, 131078, 196610, 0, 131077, 786434, 0, 131076, 131074, 0, 393221, 458754, 0, 393222, 589826, 0, 393223, 131074, 0, 327684, 262146, 0, 196615, 131074, 0, 327688, 524290, 0, 262152, 655361, 0, 196611, 131074, 0, 262147, 196610, 0, 262148, 720898, 0, 0, 458754, 0, 1, 458754, 0, 2, 458754, 0, 3, 458754, 0, 4, 458754, 0, 5, 393218, 0, 65541, 786434, 0, 458757, 262146, 0, 196613, 786434, 0, 458756, 65538, 0, 458758, 196610, 0, 196612, 196610, 0, 196614, 131074, 0)
 layer_1/name = ""
 layer_1/enabled = true
 layer_1/modulate = Color(1, 1, 1, 1)
@@ -135,7 +166,15 @@ layer_1/y_sort_origin = 0
 layer_1/z_index = 0
 layer_1/tile_data = PackedInt32Array()
 
+[node name="enemy" type="Node2D" parent="." groups=["Characters"]]
+position = Vector2(320, 320)
+script = ExtResource("3_b3x52")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="enemy"]
+sprite_frames = SubResource("SpriteFrames_2e5gl")
+
 [node name="Character" type="Node2D" parent="." groups=["Characters"]]
+position = Vector2(320, 128)
 script = ExtResource("2_orlut")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Character"]
