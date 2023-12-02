@@ -1,6 +1,6 @@
 
 extends Node2D
-
+var astargrid = AStarGrid2D
 var move_speed = 200
 var move_threshold = 0.01
 var grid_size = 64
@@ -9,6 +9,26 @@ var selected_char = null
 var move_point : Vector2 = Vector2.ZERO
 
 func _ready():
+	astargrid = AStarGrid2D.new()
+	astargrid.region =  tilemap.get_used_rect()
+	astargrid.cell_size = Vector2i(64,64)
+	astargrid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+	astargrid.update()
+	
+	
+	for x in tilemap.get_used_rect().size.x:
+		for y in tilemap.get_used_rect().size.y:
+			var tile_position = Vector2i(
+				x + tilemap.get_used_rect().position.x,
+				y +tilemap.get_used_rect().position.y
+			)
+			
+			var tile_data = tilemap.get_cell_tile_data(0, tile_position)
+			var terrain_cost = tile_data.get_custom_data("Cost")
+			if terrain_cost != null:
+				astargrid.set_point_weight_scale(tile_position, terrain_cost)
+			if tile_data == null or tile_data.get_custom_data("walkable")==false:
+				astargrid.set_point_solid(tile_position)
 	# Initialize move point at current cursor position
 	move_point = position
 
@@ -53,9 +73,15 @@ func try_move_selected_character(target):
 	var cursor_position = tilemap.local_to_map(position)  # Read the cursor position
 	print(cursor_position)
 	if selected_char != null:
-		if check_empty_cell(cursor_position)==true:
-			selected_char.move_to(cursor_position)
-			selected_char=null	
+		var valid_cells = get_cells_in_range(selected_char)
+		if cursor_position in valid_cells:
+			if check_empty_cell(cursor_position)==true:
+				selected_char.move_to(cursor_position)
+				selected_char=null	
+			else: 
+				print ("cell ",cursor_position, " is occupied!")
+		else:
+			print ("beyond range")
 		
 func check_empty_cell(target):
 	var characters = get_tree().get_nodes_in_group("Characters")
@@ -78,4 +104,45 @@ func select_character_at_cursor() -> void:
 			character.set_selected(true)
 			selected_char = character
 			print(selected_char)
+			print(get_cells_in_range(selected_char))
 			break
+			
+			
+			
+			
+			
+func get_cells_in_range(actor) -> Array:
+	var distance = actor.AP
+	var activity_points = actor.AP
+	var current_cell = tilemap.local_to_map(actor.position)	
+	print(current_cell)
+	var reachable_cells := []
+	var valid_cells := []
+
+	for i in range(-distance, distance + 1):
+		for j in range(-distance, distance + 1):
+			if abs(i) + abs(j) <= distance:
+				var new_x: int = (current_cell[0]+i)
+				var new_y: int = (current_cell[1]+j)
+				var tile_position = Vector2i(new_x,new_y)
+				reachable_cells.append(tile_position)
+	
+	for cell in reachable_cells:
+		var tile_data = tilemap.get_cell_tile_data(0, cell)
+		
+		if tile_data == null or tile_data.get_custom_data("walkable")==false:
+			continue
+		else:
+			
+			var path = astargrid.get_id_path(current_cell, cell).slice(1)
+			var path_cost = 0
+			
+			for node in path:
+				var node_data = tilemap.get_cell_tile_data(0, node)
+				var node_cost = node_data.get_custom_data("Cost")
+				
+				path_cost += node_cost
+			
+			if path_cost <= activity_points:
+				valid_cells.append(cell)
+	return valid_cells

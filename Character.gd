@@ -8,6 +8,8 @@ var isSelected = false
 var current_id_path: Array[Vector2i]
 var current_path_index=0
 
+#stats go here i guess? maybe i should make a class idk
+@onready var AP = 4
 
 func _ready() -> void:
 	
@@ -61,7 +63,12 @@ func move_to(target: Vector2) -> void:
 	
 		current_id_path = id_path
 
+
+#i feel like this should be a signal but idk how they work really
 func set_selected(value: bool) -> void:
-	isSelected = value
-			
+	isSelected = value	
 	print("Selected:", name,  isSelected)
+
+	
+	
+
