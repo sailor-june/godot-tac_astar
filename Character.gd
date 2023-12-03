@@ -9,7 +9,7 @@ var current_id_path: Array[Vector2i]
 var current_path_index=0
 
 #stats go here i guess? maybe i should make a class idk
-@onready var AP = 4
+@onready var AP = 5
 
 func _ready() -> void:
 	
@@ -55,12 +55,7 @@ func _physics_process(delta):
 func move_to(target: Vector2) -> void:
 	
 	var id_path = astargrid.get_id_path(grid.local_to_map(position), target).slice(1)
-	print("ID PATH :")
-	for step in id_path:
-		print("step: ", step, "cost: ", astargrid.get_point_weight_scale(step))
-		
 	if current_id_path.is_empty():
-	
 		current_id_path = id_path
 
 

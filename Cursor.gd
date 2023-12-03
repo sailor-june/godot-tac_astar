@@ -71,7 +71,7 @@ func _handle_input_movement():
 func try_move_selected_character(target):
 	var empty_cell = true
 	var cursor_position = tilemap.local_to_map(position)  # Read the cursor position
-	print(cursor_position)
+	
 	if selected_char != null:
 		var valid_cells = get_cells_in_range(selected_char)
 		if cursor_position in valid_cells:
@@ -82,6 +82,10 @@ func try_move_selected_character(target):
 				print ("cell ",cursor_position, " is occupied!")
 		else:
 			print ("beyond range")
+		
+		
+		
+		
 		
 func check_empty_cell(target):
 	var characters = get_tree().get_nodes_in_group("Characters")
@@ -103,8 +107,8 @@ func select_character_at_cursor() -> void:
 		if character_cell == cursor_cell && selected_char == null:
 			character.set_selected(true)
 			selected_char = character
-			print(selected_char)
-			print(get_cells_in_range(selected_char))
+			print(selected_char.name)
+			
 			break
 			
 			
