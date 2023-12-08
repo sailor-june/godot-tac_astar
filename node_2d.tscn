@@ -78,6 +78,19 @@ custom_data_layer_1/type = 3
 sources/1 = SubResource("TileSetAtlasSource_klps5")
 sources/2 = SubResource("TileSetAtlasSource_0vmy4")
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ms5fv"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_04mv1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_w56al")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_2e5gl"]
 animations = [{
 "frames": [{
@@ -96,19 +109,6 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("5_e00kp")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
-
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ms5fv"]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_04mv1"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("3_w56al")
 }],
 "loop": true,
 "name": &"default",
@@ -171,6 +171,29 @@ script = ExtResource("3_wpg4c")
 [node name="PlayerCommander" type="Node2D" parent="TurnOrder"]
 script = ExtResource("6_eoo3j")
 
+[node name="Cursor" type="Node2D" parent="TurnOrder/PlayerCommander"]
+script = ExtResource("2_mmgio")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurnOrder/PlayerCommander/Cursor"]
+material = SubResource("CanvasItemMaterial_ms5fv")
+sprite_frames = SubResource("SpriteFrames_04mv1")
+offset = Vector2(-16, 15)
+script = ExtResource("4_vejum")
+
+[node name="UI" type="Control" parent="TurnOrder/PlayerCommander"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 704.0
+offset_top = 24.0
+offset_right = 832.0
+offset_bottom = 88.0
+
+[node name="EndTurn" type="Button" parent="TurnOrder/PlayerCommander/UI"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "End Turn"
+
 [node name="EnemyCommander" type="Node2D" parent="TurnOrder"]
 script = ExtResource("4_hvnoq")
 
@@ -189,20 +212,18 @@ script = ExtResource("2_orlut")
 material = SubResource("CanvasItemMaterial_6hxa4")
 sprite_frames = SubResource("SpriteFrames_lc3ap")
 
-[node name="Cursor" type="Node2D" parent="."]
-script = ExtResource("2_mmgio")
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Cursor"]
-material = SubResource("CanvasItemMaterial_ms5fv")
-sprite_frames = SubResource("SpriteFrames_04mv1")
-offset = Vector2(-16, 15)
-script = ExtResource("4_vejum")
-
 [node name="Pathfinding" type="Node" parent="."]
 script = ExtResource("7_tpcjv")
 
 [node name="PriorityQueue" type="Node" parent="."]
 script = SubResource("GDScript_vfnxh")
 
+[node name="TurnLabel" type="Label" parent="."]
+offset_left = 704.0
+offset_right = 744.0
+offset_bottom = 23.0
+text = "Current Turn"
+
 [connection signal="round_ended" from="TurnOrder" to="." method="_on_round_ended"]
 [connection signal="turn_ended" from="TurnOrder" to="." method="_on_turn_ended"]
+[connection signal="turn_started" from="TurnOrder" to="." method="_on_turn_started"]

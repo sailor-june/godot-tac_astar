@@ -46,6 +46,9 @@ func _process(_delta):
 			try_move_selected_character(tilemap.map_to_local(position))
 
 func _handle_input_movement():
+	if not visible:
+		return
+		
 	# Handle arrow key input for moving the cursor
 	var movement = Vector2.ZERO
 	
