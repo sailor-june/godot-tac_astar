@@ -1,14 +1,18 @@
-[gd_scene load_steps=20 format=3 uid="uid://5f5uhnskphmk"]
+[gd_scene load_steps=24 format=3 uid="uid://5f5uhnskphmk"]
 
 [ext_resource type="Texture2D" uid="uid://bh3dj1dlrc733" path="res://sprites/grasstile5-Sheet.png" id="1_1gv4k"]
+[ext_resource type="Script" path="res://main.gd" id="1_rcbie"]
 [ext_resource type="Texture2D" uid="uid://c3gk7p688hv8e" path="res://sprites/water-sheet.png" id="1_vs51o"]
 [ext_resource type="Script" path="res://Cursor.gd" id="2_mmgio"]
 [ext_resource type="Script" path="res://Character.gd" id="2_orlut"]
 [ext_resource type="Script" path="res://enemy.gd" id="3_b3x52"]
 [ext_resource type="Texture2D" uid="uid://b1xde5yrajtxi" path="res://sprites/satan.png" id="3_t7qe6"]
 [ext_resource type="Texture2D" uid="uid://dcqktjylt20g2" path="res://sprites/cursor.png" id="3_w56al"]
+[ext_resource type="Script" path="res://turn_order.gd" id="3_wpg4c"]
+[ext_resource type="Script" path="res://enemy_commander.gd" id="4_hvnoq"]
 [ext_resource type="Script" path="res://AnimatedSprite2D.gd" id="4_vejum"]
 [ext_resource type="Texture2D" uid="uid://dq5dwv0v4oxbh" path="res://sprites/knight.png" id="5_e00kp"]
+[ext_resource type="Script" path="res://player_commander.gd" id="6_eoo3j"]
 [ext_resource type="Script" path="res://Pathfinding.gd" id="7_tpcjv"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_klps5"]
@@ -74,6 +78,19 @@ custom_data_layer_1/type = 3
 sources/1 = SubResource("TileSetAtlasSource_klps5")
 sources/2 = SubResource("TileSetAtlasSource_0vmy4")
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ms5fv"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_04mv1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_w56al")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_2e5gl"]
 animations = [{
 "frames": [{
@@ -92,19 +109,6 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("5_e00kp")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
-
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ms5fv"]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_04mv1"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("3_w56al")
 }],
 "loop": true,
 "name": &"default",
@@ -151,20 +155,47 @@ script/source = "extends Node#class PriorityQueue:
 "
 
 [node name="Main" type="Node2D"]
+script = ExtResource("1_rcbie")
 
 [node name="theGrid" type="TileMap" parent="."]
 position = Vector2(1, 0)
 tile_set = SubResource("TileSet_4den7")
-cell_quadrant_size = 64
+rendering_quadrant_size = 64
 format = 2
 layer_0/tile_data = PackedInt32Array(6, 131074, 0, 7, 65538, 0, 8, 131074, 0, 9, 131074, 0, 10, 196610, 0, 65546, 65538, 0, 131082, 131074, 0, 196618, 65538, 0, 262154, 131074, 0, 327690, 131074, 0, 393226, 131074, 0, 458762, 131074, 0, 524298, 65538, 0, 589834, 196610, 0, 589833, 131074, 0, 589832, 65538, 0, 589831, 65538, 0, 589830, 65538, 0, 589829, 65538, 0, 589828, 65538, 0, 589827, 65538, 0, 589826, 65538, 0, 589825, 196610, 0, 589824, 196610, 0, 524288, 65538, 0, 458752, 65538, 0, 393216, 196610, 0, 327680, 196610, 0, 262144, 196610, 0, 196608, 65538, 0, 131072, 65538, 0, 65536, 65538, 0, 65540, 65538, 0, 65539, 65538, 0, 65538, 65538, 0, 65537, 65538, 0, 131073, 196610, 0, 196609, 65538, 0, 262145, 131074, 0, 327681, 131074, 0, 393217, 131074, 0, 458753, 196610, 0, 524289, 196610, 0, 524290, 65538, 0, 458754, 65538, 0, 393218, 65538, 0, 196610, 65538, 0, 131074, 65538, 0, 393219, 524290, 0, 458755, 524290, 0, 524291, 131074, 0, 524292, 655362, 0, 65542, 458753, 0, 524293, 458754, 0, 524294, 589826, 0, 65543, 65538, 0, 65544, 65538, 0, 131080, 65538, 0, 458760, 65538, 0, 458759, 2, 0, 524295, 196610, 0, 524296, 65538, 0, 524297, 196610, 0, 458761, 65538, 0, 393225, 196610, 0, 327689, 196610, 0, 262153, 65538, 0, 196617, 131074, 0, 131081, 196610, 0, 65545, 196610, 0, 327685, 458754, 0, 262151, 196610, 0, 327687, 2, 0, 327686, 393218, 0, 262150, 65538, 0, 262149, 786434, 0, 262146, 65538, 0, 327682, 65538, 0, 131079, 196610, 0, 196616, 262146, 0, 393224, 65538, 0, 393220, 262146, 0, 327683, 524290, 0, 131075, 65538, 0, 131078, 393217, 0, 131077, 262145, 0, 131076, 131074, 0, 393221, 196610, 0, 393222, 786434, 0, 393223, 2, 0, 327684, 720898, 0, 196615, 262146, 0, 327688, 65538, 0, 262152, 65538, 0, 196611, 65538, 0, 262147, 196610, 0, 262148, 65538, 0, 0, 65538, 0, 1, 65538, 0, 2, 65538, 0, 3, 65538, 0, 4, 65538, 0, 5, 65538, 0, 65541, 589825, 0, 458757, 262146, 0, 196613, 65538, 0, 458756, 786434, 0, 458758, 786434, 0, 196612, 65538, 0, 196614, 262146, 0)
-layer_1/name = ""
-layer_1/enabled = true
-layer_1/modulate = Color(1, 1, 1, 1)
-layer_1/y_sort_enabled = false
-layer_1/y_sort_origin = 0
-layer_1/z_index = 0
 layer_1/tile_data = PackedInt32Array()
+
+[node name="TurnOrder" type="Node2D" parent="."]
+script = ExtResource("3_wpg4c")
+
+[node name="PlayerCommander" type="Node2D" parent="TurnOrder"]
+script = ExtResource("6_eoo3j")
+
+[node name="Cursor" type="Node2D" parent="TurnOrder/PlayerCommander"]
+script = ExtResource("2_mmgio")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurnOrder/PlayerCommander/Cursor"]
+material = SubResource("CanvasItemMaterial_ms5fv")
+sprite_frames = SubResource("SpriteFrames_04mv1")
+offset = Vector2(-16, 15)
+script = ExtResource("4_vejum")
+
+[node name="UI" type="Control" parent="TurnOrder/PlayerCommander"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 704.0
+offset_top = 24.0
+offset_right = 832.0
+offset_bottom = 88.0
+
+[node name="EndTurn" type="Button" parent="TurnOrder/PlayerCommander/UI"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "End Turn"
+
+[node name="EnemyCommander" type="Node2D" parent="TurnOrder"]
+script = ExtResource("4_hvnoq")
 
 [node name="enemy" type="Node2D" parent="." groups=["Characters"]]
 position = Vector2(212, 219)
@@ -181,17 +212,18 @@ script = ExtResource("2_orlut")
 material = SubResource("CanvasItemMaterial_6hxa4")
 sprite_frames = SubResource("SpriteFrames_lc3ap")
 
-[node name="Cursor" type="Node2D" parent="."]
-script = ExtResource("2_mmgio")
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Cursor"]
-material = SubResource("CanvasItemMaterial_ms5fv")
-sprite_frames = SubResource("SpriteFrames_04mv1")
-offset = Vector2(-16, 15)
-script = ExtResource("4_vejum")
-
 [node name="Pathfinding" type="Node" parent="."]
 script = ExtResource("7_tpcjv")
 
 [node name="PriorityQueue" type="Node" parent="."]
 script = SubResource("GDScript_vfnxh")
+
+[node name="TurnLabel" type="Label" parent="."]
+offset_left = 704.0
+offset_right = 744.0
+offset_bottom = 23.0
+text = "Current Turn"
+
+[connection signal="round_ended" from="TurnOrder" to="." method="_on_round_ended"]
+[connection signal="turn_ended" from="TurnOrder" to="." method="_on_turn_ended"]
+[connection signal="turn_started" from="TurnOrder" to="." method="_on_turn_started"]
