@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://5f5uhnskphmk"]
+[gd_scene load_steps=22 format=3 uid="uid://5f5uhnskphmk"]
 
 [ext_resource type="Texture2D" uid="uid://bh3dj1dlrc733" path="res://sprites/grasstile5-Sheet.png" id="1_1gv4k"]
 [ext_resource type="Script" path="res://main.gd" id="1_rcbie"]
@@ -13,7 +13,6 @@
 [ext_resource type="Script" path="res://AnimatedSprite2D.gd" id="4_vejum"]
 [ext_resource type="Texture2D" uid="uid://dq5dwv0v4oxbh" path="res://sprites/knight.png" id="5_e00kp"]
 [ext_resource type="Script" path="res://player_commander.gd" id="6_eoo3j"]
-[ext_resource type="Script" path="res://Pathfinding.gd" id="7_tpcjv"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_klps5"]
 texture = ExtResource("1_vs51o")
@@ -115,45 +114,6 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="GDScript" id="GDScript_vfnxh"]
-script/source = "extends Node#class PriorityQueue:
-#	var _sortedItems = {}
-#
-#	func _get_count():
-#		var count = 0
-#		for pair in _sortedItems.values():
-#			count += pair.size()
-#		return count
-#
-#	func contains(item):
-#		for pair in _sortedItems.values():
-#			if pair.find(item) != -1:
-#				return true
-#		return false
-#
-#	func enqueue(item, priority):
-#		if not _sortedItems.has(priority):
-#			_sortedItems[priority] = []
-#
-#		_sortedItems[priority].append(item)
-#
-#	func dequeue():
-#		var keys = _sortedItems.keys()
-#		if keys.size() == 0:
-#			return null
-#
-#		var min_key = keys[0]
-#		for key in keys:
-#			if key < min_key:
-#				min_key = key
-#
-#		var queue = _sortedItems[min_key]
-#		var item = queue.pop_front()
-#		if queue.size() == 0:
-#			_sortedItems.erase(min_key)
-#		return item
-"
-
 [node name="Main" type="Node2D"]
 script = ExtResource("1_rcbie")
 
@@ -190,14 +150,15 @@ offset_bottom = 88.0
 
 [node name="EndTurn" type="Button" parent="TurnOrder/PlayerCommander/UI"]
 layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
+offset_top = 70.0
+offset_right = 78.0
+offset_bottom = 101.0
 text = "End Turn"
 
 [node name="EnemyCommander" type="Node2D" parent="TurnOrder"]
 script = ExtResource("4_hvnoq")
 
-[node name="enemy" type="Node2D" parent="." groups=["Characters"]]
+[node name="enemy" type="Node2D" parent="." groups=["Characters", "Enemies"]]
 position = Vector2(212, 219)
 script = ExtResource("3_b3x52")
 
@@ -212,18 +173,20 @@ script = ExtResource("2_orlut")
 material = SubResource("CanvasItemMaterial_6hxa4")
 sprite_frames = SubResource("SpriteFrames_lc3ap")
 
-[node name="Pathfinding" type="Node" parent="."]
-script = ExtResource("7_tpcjv")
-
-[node name="PriorityQueue" type="Node" parent="."]
-script = SubResource("GDScript_vfnxh")
-
 [node name="TurnLabel" type="Label" parent="."]
 offset_left = 704.0
 offset_right = 744.0
 offset_bottom = 23.0
 text = "Current Turn"
 
+[node name="SelectionLabel" type="Label" parent="."]
+offset_left = 703.0
+offset_top = 55.0
+offset_right = 804.0
+offset_bottom = 78.0
+text = "Selected: "
+
 [connection signal="round_ended" from="TurnOrder" to="." method="_on_round_ended"]
 [connection signal="turn_ended" from="TurnOrder" to="." method="_on_turn_ended"]
 [connection signal="turn_started" from="TurnOrder" to="." method="_on_turn_started"]
+[connection signal="selected" from="TurnOrder/PlayerCommander/Cursor" to="." method="_on_selected"]

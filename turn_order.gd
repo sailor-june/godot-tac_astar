@@ -3,6 +3,7 @@ class_name TurnOrder
 
 signal turn_started(agent: Node2D)
 signal turn_ended(agent: Node2D)
+
 signal round_ended()
 
 var execute_next_frame: bool = true

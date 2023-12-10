@@ -1,35 +1,17 @@
 
 extends Node2D
-var astargrid = AStarGrid2D
+var astargrid : AStarGrid2D
 var move_speed = 200
 var move_threshold = 0.01
 var grid_size = 64
 var selected_char = null
+signal selected(agent: Node2D)
+
 @onready var tilemap = get_node("/root/Main/theGrid") #reference to tilemap
 var move_point : Vector2 = Vector2.ZERO
 
 func _ready():
-	astargrid = AStarGrid2D.new()
-	astargrid.region =  tilemap.get_used_rect()
-	astargrid.cell_size = Vector2i(64,64)
-	astargrid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
-	astargrid.update()
 	
-	
-	for x in tilemap.get_used_rect().size.x:
-		for y in tilemap.get_used_rect().size.y:
-			var tile_position = Vector2i(
-				x + tilemap.get_used_rect().position.x,
-				y +tilemap.get_used_rect().position.y
-			)
-			
-			var tile_data = tilemap.get_cell_tile_data(0, tile_position)
-			var terrain_cost = tile_data.get_custom_data("Cost")
-			if terrain_cost != null:
-				astargrid.set_point_weight_scale(tile_position, terrain_cost)
-			if tile_data == null or tile_data.get_custom_data("walkable")==false:
-				astargrid.set_point_solid(tile_position)
-	# Initialize move point at current cursor position
 	move_point = position
 
 func _process(_delta):
@@ -80,7 +62,8 @@ func try_move_selected_character(target):
 		if cursor_position in valid_cells:
 			if check_empty_cell(cursor_position)==true:
 				selected_char.move_to(cursor_position)
-				selected_char=null	
+				selected_char=null
+				selected.emit(selected_char)	
 			else: 
 				print ("cell ",cursor_position, " is occupied!")
 		else:
@@ -102,15 +85,21 @@ func select_character_at_cursor() -> void:
 	var cursor_cell = tilemap.local_to_map(global_position)  # Get the cell coordinates of the cursor
 
 	var characters = get_tree().get_nodes_in_group("Characters")  
+	var enemies = get_tree().get_nodes_in_group("Enemies")
+	
 	
 	
 	for character in characters:
 		
 		var character_cell = tilemap.local_to_map(character.position)  # Get the cell coordinates of the character
 		if character_cell == cursor_cell && selected_char == null:
+			if character in enemies:
+				print(" Cannot select enemy units!")
+				break
 			character.set_selected(true)
 			selected_char = character
-			print(selected_char.name)
+			
+			selected.emit(selected_char)
 			
 			break
 			
@@ -129,11 +118,13 @@ func get_cells_in_range(actor) -> Array:
 	for i in range(-distance, distance + 1):
 		for j in range(-distance, distance + 1):
 			if abs(i) + abs(j) <= distance:
+						
 				var new_x: int = (current_cell[0]+i)
 				var new_y: int = (current_cell[1]+j)
 				var tile_position = Vector2i(new_x,new_y)
-				reachable_cells.append(tile_position)
-	
+				if check_empty_cell(tile_position):
+					reachable_cells.append(tile_position)
+
 	for cell in reachable_cells:
 		var tile_data = tilemap.get_cell_tile_data(0, cell)
 		
@@ -147,7 +138,6 @@ func get_cells_in_range(actor) -> Array:
 			for node in path:
 				var node_data = tilemap.get_cell_tile_data(0, node)
 				var node_cost = node_data.get_custom_data("Cost")
-				
 				path_cost += node_cost
 			
 			if path_cost <= activity_points:
