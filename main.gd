@@ -28,8 +28,9 @@ func _ready() -> void:
 	maintain_enemy_positions()
 
 	$Character.astargrid = astargrid
-	$enemy.astargrid = astargrid
 	cursor.astargrid = astargrid
+	
+	$TurnOrder/EnemyCommander.map = $theGrid
 
 
 func maintain_enemy_positions():

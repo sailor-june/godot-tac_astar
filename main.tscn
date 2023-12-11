@@ -158,11 +158,11 @@ text = "End Turn"
 [node name="EnemyCommander" type="Node2D" parent="TurnOrder"]
 script = ExtResource("9_locwh")
 
-[node name="enemy" type="Node2D" parent="." groups=["Characters", "Enemies"]]
+[node name="enemy" type="Node2D" parent="TurnOrder/EnemyCommander" groups=["Characters", "Enemies"]]
 position = Vector2(212, 219)
 script = ExtResource("10_gr8q1")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="enemy"]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurnOrder/EnemyCommander/enemy"]
 sprite_frames = SubResource("SpriteFrames_2e5gl")
 
 [node name="Character" type="Node2D" parent="." groups=["Characters"]]
