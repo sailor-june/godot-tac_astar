@@ -135,7 +135,6 @@ script = ExtResource("6_eoo3j")
 script = ExtResource("2_mmgio")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurnOrder/PlayerCommander/Cursor"]
-z_index = 1
 material = SubResource("CanvasItemMaterial_ms5fv")
 sprite_frames = SubResource("SpriteFrames_04mv1")
 offset = Vector2(-16, 15)

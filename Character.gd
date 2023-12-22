@@ -26,7 +26,6 @@ func _physics_process(delta):
 		return
 	var target_position = grid.map_to_local(current_id_path.front())
 	position = position.move_toward(target_position,move_speed*get_process_delta_time())
-	await get_tree().create_timer(0.3).timeout
 	if position ==  target_position:
 		current_id_path.pop_front()
 
