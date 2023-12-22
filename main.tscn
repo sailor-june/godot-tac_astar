@@ -1,21 +1,21 @@
 [gd_scene load_steps=22 format=3 uid="uid://5f5uhnskphmk"]
 
-[ext_resource type="Texture2D" uid="uid://bh3dj1dlrc733" path="res://sprites/grasstile5-Sheet.png" id="1_1gv4k"]
-[ext_resource type="Script" path="res://main.gd" id="1_rcbie"]
-[ext_resource type="Texture2D" uid="uid://c3gk7p688hv8e" path="res://sprites/water-sheet.png" id="1_vs51o"]
-[ext_resource type="Script" path="res://Cursor.gd" id="2_mmgio"]
-[ext_resource type="Script" path="res://Character.gd" id="2_orlut"]
-[ext_resource type="Script" path="res://enemy.gd" id="3_b3x52"]
-[ext_resource type="Texture2D" uid="uid://b1xde5yrajtxi" path="res://sprites/satan.png" id="3_t7qe6"]
-[ext_resource type="Texture2D" uid="uid://dcqktjylt20g2" path="res://sprites/cursor.png" id="3_w56al"]
-[ext_resource type="Script" path="res://turn_order.gd" id="3_wpg4c"]
-[ext_resource type="Script" path="res://enemy_commander.gd" id="4_hvnoq"]
-[ext_resource type="Script" path="res://AnimatedSprite2D.gd" id="4_vejum"]
-[ext_resource type="Texture2D" uid="uid://dq5dwv0v4oxbh" path="res://sprites/knight.png" id="5_e00kp"]
-[ext_resource type="Script" path="res://player_commander.gd" id="6_eoo3j"]
+[ext_resource type="Script" path="res://main.gd" id="1_7wjok"]
+[ext_resource type="Texture2D" uid="uid://c3gk7p688hv8e" path="res://sprites/water-sheet.png" id="2_6ykb1"]
+[ext_resource type="Texture2D" uid="uid://bh3dj1dlrc733" path="res://sprites/grasstile5-Sheet.png" id="3_ubeel"]
+[ext_resource type="Script" path="res://turn_order.gd" id="4_japif"]
+[ext_resource type="Script" path="res://player_commander.gd" id="5_y8x4g"]
+[ext_resource type="Script" path="res://Cursor.gd" id="6_38ulj"]
+[ext_resource type="Texture2D" uid="uid://dcqktjylt20g2" path="res://sprites/cursor.png" id="7_v62og"]
+[ext_resource type="Script" path="res://AnimatedSprite2D.gd" id="8_rdkhf"]
+[ext_resource type="Script" path="res://enemy_commander.gd" id="9_locwh"]
+[ext_resource type="Script" path="res://enemy.gd" id="10_gr8q1"]
+[ext_resource type="Texture2D" uid="uid://b1xde5yrajtxi" path="res://sprites/satan.png" id="11_3l0co"]
+[ext_resource type="Script" path="res://Character.gd" id="12_x3nj6"]
+[ext_resource type="Texture2D" uid="uid://dq5dwv0v4oxbh" path="res://sprites/knight.png" id="13_43hgf"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_klps5"]
-texture = ExtResource("1_vs51o")
+texture = ExtResource("2_6ykb1")
 texture_region_size = Vector2i(64, 64)
 0:0/0 = 0
 1:0/0 = 0
@@ -30,7 +30,7 @@ texture_region_size = Vector2i(64, 64)
 10:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0vmy4"]
-texture = ExtResource("1_1gv4k")
+texture = ExtResource("3_ubeel")
 texture_region_size = Vector2i(64, 64)
 0:0/0 = 0
 1:0/0 = 0
@@ -83,7 +83,7 @@ sources/2 = SubResource("TileSetAtlasSource_0vmy4")
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_w56al")
+"texture": ExtResource("7_v62og")
 }],
 "loop": true,
 "name": &"default",
@@ -94,7 +94,7 @@ animations = [{
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_t7qe6")
+"texture": ExtResource("11_3l0co")
 }],
 "loop": true,
 "name": &"default",
@@ -107,7 +107,7 @@ animations = [{
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("5_e00kp")
+"texture": ExtResource("13_43hgf")
 }],
 "loop": true,
 "name": &"default",
@@ -115,7 +115,7 @@ animations = [{
 }]
 
 [node name="Main" type="Node2D"]
-script = ExtResource("1_rcbie")
+script = ExtResource("1_7wjok")
 
 [node name="theGrid" type="TileMap" parent="."]
 position = Vector2(1, 0)
@@ -126,19 +126,19 @@ layer_0/tile_data = PackedInt32Array(6, 131074, 0, 7, 65538, 0, 8, 131074, 0, 9,
 layer_1/tile_data = PackedInt32Array()
 
 [node name="TurnOrder" type="Node2D" parent="."]
-script = ExtResource("3_wpg4c")
+script = ExtResource("4_japif")
 
 [node name="PlayerCommander" type="Node2D" parent="TurnOrder"]
-script = ExtResource("6_eoo3j")
+script = ExtResource("5_y8x4g")
 
 [node name="Cursor" type="Node2D" parent="TurnOrder/PlayerCommander"]
-script = ExtResource("2_mmgio")
+script = ExtResource("6_38ulj")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurnOrder/PlayerCommander/Cursor"]
 material = SubResource("CanvasItemMaterial_ms5fv")
 sprite_frames = SubResource("SpriteFrames_04mv1")
 offset = Vector2(-16, 15)
-script = ExtResource("4_vejum")
+script = ExtResource("8_rdkhf")
 
 [node name="UI" type="Control" parent="TurnOrder/PlayerCommander"]
 layout_mode = 3
@@ -156,18 +156,18 @@ offset_bottom = 101.0
 text = "End Turn"
 
 [node name="EnemyCommander" type="Node2D" parent="TurnOrder"]
-script = ExtResource("4_hvnoq")
+script = ExtResource("9_locwh")
 
-[node name="enemy" type="Node2D" parent="." groups=["Characters", "Enemies"]]
+[node name="enemy" type="Node2D" parent="TurnOrder/EnemyCommander" groups=["Characters", "Enemies"]]
 position = Vector2(212, 219)
-script = ExtResource("3_b3x52")
+script = ExtResource("10_gr8q1")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="enemy"]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurnOrder/EnemyCommander/enemy"]
 sprite_frames = SubResource("SpriteFrames_2e5gl")
 
 [node name="Character" type="Node2D" parent="." groups=["Characters"]]
 position = Vector2(357, 222)
-script = ExtResource("2_orlut")
+script = ExtResource("12_x3nj6")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Character"]
 material = SubResource("CanvasItemMaterial_6hxa4")
