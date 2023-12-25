@@ -11,7 +11,6 @@ signal selected(agent: Node2D)
 var move_point : Vector2 = Vector2.ZERO
 
 func _ready():
-	
 	move_point = position
 
 func _process(_delta):
@@ -73,8 +72,10 @@ func try_move_selected_character(target):
 		
 		
 		
-func check_empty_cell(target):
+func check_empty_cell(target, team = null):
 	var characters = get_tree().get_nodes_in_group("Characters")
+	if team:
+		characters = get_tree().get_nodes_in_group(team)
 	for character in characters:
 		if tilemap.local_to_map(character.position) == target:
 			return false
@@ -83,14 +84,12 @@ func check_empty_cell(target):
 			
 func select_character_at_cursor() -> void:
 	var cursor_cell = tilemap.local_to_map(global_position)  # Get the cell coordinates of the cursor
-
 	var characters = get_tree().get_nodes_in_group("Characters")  
 	var enemies = get_tree().get_nodes_in_group("Enemies")
 	
 	
-	
 	for character in characters:
-	
+		
 		var character_cell = tilemap.local_to_map(character.position)  # Get the cell coordinates of the character
 		if character_cell == cursor_cell && selected_char == null:
 			if character in enemies:
@@ -101,7 +100,6 @@ func select_character_at_cursor() -> void:
 				break
 			character.set_selected(true)
 			selected_char = character
-			
 			selected.emit(selected_char)
 			
 			break
