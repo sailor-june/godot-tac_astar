@@ -1,4 +1,5 @@
 extends Node2D
+class_name player_char 
 # Variables
 var astargrid : AStarGrid2D
 var move_speed = 250
@@ -11,6 +12,8 @@ var current_path_index=0
 #stats go here i guess? maybe i should make a class idk
 var char_name = "bbgrl"
 @onready var AP = 20
+var has_moved = false
+
 
 func _ready() -> void:
 	
@@ -33,13 +36,16 @@ func move_to(target: Vector2) -> void:
 	var id_path = astargrid.get_id_path(grid.local_to_map(position), target).slice(1)
 	if current_id_path.is_empty():
 		current_id_path = id_path
+		has_moved = true
 
 
 #i feel like this should be a signal but idk how they work really
 func set_selected(value: bool) -> void:
-	isSelected = value	
-	print("Selected:", name,  isSelected)
-
+	if not has_moved:
+		isSelected = value	
+		print("Selected:", name,  isSelected)
+	else: 
+		print ("character has already moved once this turn ")
 	
 	
 

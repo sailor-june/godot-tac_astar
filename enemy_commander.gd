@@ -10,6 +10,7 @@ func _process_turn():
 			continue
 		print("Moving "+c.name)
 		await move_unit(cells, c)
+		print(c.moving, c.current_target)
 	await get_tree().create_timer(2.0).timeout
 
 func build_cells() -> Dictionary:
@@ -21,6 +22,9 @@ func build_cells() -> Dictionary:
 func move_unit(cells: Dictionary, unit: Node2D):
 	var path = find_closest_target(cells, map.local_to_map(unit.position))
 	print('Move '+unit.name+': '+str(path))
+	unit.current_target=path.pop_back()
+	unit.current_id_path = path
+	unit.moving=true
 	
 func find_closest_target(cells: Dictionary, origin: Vector2i) -> Array:
 	var closest = {}

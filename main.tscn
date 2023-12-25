@@ -165,7 +165,7 @@ script = ExtResource("10_gr8q1")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurnOrder/EnemyCommander/enemy"]
 sprite_frames = SubResource("SpriteFrames_2e5gl")
 
-[node name="Character" type="Node2D" parent="." groups=["Characters"]]
+[node name="Character" type="Node2D" parent="." groups=["Characters", "player_characters"]]
 position = Vector2(357, 222)
 script = ExtResource("12_x3nj6")
 

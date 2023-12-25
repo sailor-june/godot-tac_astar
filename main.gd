@@ -27,7 +27,9 @@ func _ready() -> void:
 				astargrid.set_point_solid(tile_position)
 	maintain_enemy_positions()
 
-	$Character.astargrid = astargrid
+
+	for char in get_tree().get_nodes_in_group("Characters"):
+		char.astargrid = astargrid
 	cursor.astargrid = astargrid
 	
 	$TurnOrder/EnemyCommander.map = $theGrid

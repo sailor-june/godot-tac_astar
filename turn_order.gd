@@ -18,6 +18,8 @@ func _process(delta):
 		execute_next_frame = false
 	
 func execute_round_async():
+	for char in get_tree().get_nodes_in_group("player_characters"):
+		char.has_moved = false
 	print("Starting round " + str(round_count))
 	for c in get_children():
 		if not c.has_method('_process_turn'):

@@ -90,11 +90,14 @@ func select_character_at_cursor() -> void:
 	
 	
 	for character in characters:
-		
+	
 		var character_cell = tilemap.local_to_map(character.position)  # Get the cell coordinates of the character
 		if character_cell == cursor_cell && selected_char == null:
 			if character in enemies:
 				print(" Cannot select enemy units!")
+				break
+			if character.has_moved:
+				print ("character has already moved this turn")
 				break
 			character.set_selected(true)
 			selected_char = character
