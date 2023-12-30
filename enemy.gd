@@ -25,5 +25,4 @@ func _process(delta):
 	position = position.move_toward(target_position,move_speed*get_process_delta_time())
 	if position ==  target_position:
 		current_id_path.pop_front()
-		print(current_target)
-		print(moving)
+

@@ -1,4 +1,4 @@
-
+class_name Cursor
 extends Node2D
 var astargrid : AStarGrid2D
 var move_speed = 200
@@ -6,7 +6,7 @@ var move_threshold = 0.01
 var grid_size = 64
 var selected_char = null
 signal selected(agent: Node2D)
-
+@onready var selection_phase = true
 @onready var tilemap = get_node("/root/Main/theGrid") #reference to tilemap
 var move_point : Vector2 = Vector2.ZERO
 
@@ -15,16 +15,19 @@ func _ready():
 
 func _process(_delta):
 	# Move cursor towards move point
-	position = position.move_toward(move_point, move_speed * get_process_delta_time())
-	
-	# Check if cursor is close enough to the move point to allow input handling
-	if position.distance_to(move_point) <= move_threshold:
-		_handle_input_movement()
-	if Input.is_action_just_pressed("confirm"):
-		if selected_char==null:
-			select_character_at_cursor()
-		else:
-			try_move_selected_character(tilemap.map_to_local(position))
+	if selection_phase == true:
+		position = position.move_toward(move_point, move_speed * get_process_delta_time())
+
+		# Check if cursor is close enough to the move point to allow input handling
+		if position.distance_to(move_point) <= move_threshold:
+			_handle_input_movement()
+		if Input.is_action_just_pressed("confirm"):
+			if check_cell_occupant(tilemap.local_to_map(position), "player_characters")==true:
+				if selected_char==null:
+					select_character_at_cursor()
+					
+			else:
+				try_move_selected_character(tilemap.map_to_local(position))
 
 func _handle_input_movement():
 	if not visible:
@@ -59,10 +62,15 @@ func try_move_selected_character(target):
 	if selected_char != null:
 		var valid_cells = get_cells_in_range(selected_char)
 		if cursor_position in valid_cells:
-			if check_empty_cell(cursor_position)==true:
+			if check_cell_occupant(cursor_position)==false:
+				#this last check might be redundant but its not hurting for now so idk
+				selection_phase = false
 				selected_char.move_to(cursor_position)
+				#await move_complete()
+				await selected_char.move_completed
 				selected_char=null
 				selected.emit(selected_char)	
+				show_menu_at_position(position)
 			else: 
 				print ("cell ",cursor_position, " is occupied!")
 		else:
@@ -72,15 +80,15 @@ func try_move_selected_character(target):
 		
 		
 		
-func check_empty_cell(target, team = null):
+func check_cell_occupant(target, team = null):
 	var characters = get_tree().get_nodes_in_group("Characters")
 	if team:
 		characters = get_tree().get_nodes_in_group(team)
 	for character in characters:
 		if tilemap.local_to_map(character.position) == target:
-			return false
-		else:
 			return true
+		else:
+			return false
 			
 func select_character_at_cursor() -> void:
 	var cursor_cell = tilemap.local_to_map(global_position)  # Get the cell coordinates of the cursor
@@ -123,7 +131,7 @@ func get_cells_in_range(actor) -> Array:
 				var new_x: int = (current_cell[0]+i)
 				var new_y: int = (current_cell[1]+j)
 				var tile_position = Vector2i(new_x,new_y)
-				if check_empty_cell(tile_position):
+				if not check_cell_occupant(tile_position):
 					reachable_cells.append(tile_position)
 
 	for cell in reachable_cells:
@@ -144,3 +152,19 @@ func get_cells_in_range(actor) -> Array:
 			if path_cost <= activity_points:
 				valid_cells.append(cell)
 	return valid_cells
+
+
+func show_menu_at_position(position):
+
+	var menu_popup = PopupMenu.new()
+
+	menu_popup.add_item("Attack")
+	menu_popup.add_item("Item")
+	menu_popup.add_separator()
+	menu_popup.add_item("Cancel")
+
+	menu_popup.position = position
+	add_child(menu_popup)
+
+	menu_popup.popup()
+	

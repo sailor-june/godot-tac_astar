@@ -54,6 +54,7 @@ func _on_selected(agent):
 func _on_turn_started(agent):
 	maintain_terrain()
 	maintain_enemy_positions()
+	# for character in player_characters: set AP to max_AP
 	$TurnLabel.text = "Turn: " + agent.name
 	
 func _on_turn_ended(agent):
@@ -61,7 +62,8 @@ func _on_turn_ended(agent):
 
 func _on_round_ended():
 	print('Round ended')
-	
+
+
 
 func _process(delta):
 	pass

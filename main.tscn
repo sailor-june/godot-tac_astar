@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://5f5uhnskphmk"]
+[gd_scene load_steps=23 format=3 uid="uid://5f5uhnskphmk"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_7wjok"]
 [ext_resource type="Texture2D" uid="uid://c3gk7p688hv8e" path="res://sprites/water-sheet.png" id="2_6ykb1"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://b1xde5yrajtxi" path="res://sprites/satan.png" id="11_3l0co"]
 [ext_resource type="Script" path="res://Character.gd" id="12_x3nj6"]
 [ext_resource type="Texture2D" uid="uid://dq5dwv0v4oxbh" path="res://sprites/knight.png" id="13_43hgf"]
+[ext_resource type="Script" path="res://Movement_popup.gd" id="14_x12jx"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_klps5"]
 texture = ExtResource("2_6ykb1")
@@ -186,7 +187,11 @@ offset_right = 804.0
 offset_bottom = 78.0
 text = "Selected: "
 
+[node name="Movement_popup" type="PopupMenu" parent="."]
+script = ExtResource("14_x12jx")
+
 [connection signal="round_ended" from="TurnOrder" to="." method="_on_round_ended"]
 [connection signal="turn_ended" from="TurnOrder" to="." method="_on_turn_ended"]
 [connection signal="turn_started" from="TurnOrder" to="." method="_on_turn_started"]
 [connection signal="selected" from="TurnOrder/PlayerCommander/Cursor" to="." method="_on_selected"]
+[connection signal="id_pressed" from="Movement_popup" to="Movement_popup" method="_on_id_pressed"]
