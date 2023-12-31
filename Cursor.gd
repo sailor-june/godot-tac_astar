@@ -114,6 +114,26 @@ func select_character_at_cursor() -> void:
 			
 			
 			
+
+func check_for_enemies_around(position, team):
+	var adjacent_positions = [
+		Vector2i(position.x - 1, position.y),  # Left
+		Vector2i(position.x, position.y - 1),  # Up
+		Vector2i(position.x + 1, position.y),  # Right
+		Vector2i(position.x, position.y + 1)   # Down
+	]
+
+	var enemies_present = false
+
+	for adj_pos in adjacent_positions:
+		# Check if there's an enemy at the adjacent position
+		if check_cell_occupant(adj_pos, team):
+			enemies_present = true
+			break  # Exit the loop if an enemy is found
+
+	return enemies_present
+
+
 			
 			
 func get_cells_in_range(actor) -> Array:
@@ -156,15 +176,11 @@ func get_cells_in_range(actor) -> Array:
 
 func show_menu_at_position(position):
 
-	var menu_popup = PopupMenu.new()
-
-	menu_popup.add_item("Attack")
-	menu_popup.add_item("Item")
-	menu_popup.add_separator()
-	menu_popup.add_item("Cancel")
-
-	menu_popup.position = position
-	add_child(menu_popup)
-
+	var menu_popup = get_node("/root/Main/Movement_popup")
+	menu_popup.position=position
+	var isAttackEnabled = check_for_enemies_around(tilemap.local_to_map(position), "Enemies") # Check for enemies
+	# Update the Attack option in the PopupMenu
+	print("attack enabled?: ",isAttackEnabled)
+	menu_popup.set_item_disabled(0, !isAttackEnabled)
 	menu_popup.popup()
 	

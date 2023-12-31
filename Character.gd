@@ -2,7 +2,7 @@ extends Node2D
 class_name player_char 
 # Variables
 var astargrid : AStarGrid2D
-var move_speed = 70
+var move_speed = 180
 var isSelected = false
 @onready var grid = get_node("/root/Main/theGrid")
 
