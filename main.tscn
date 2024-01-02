@@ -133,6 +133,7 @@ script = ExtResource("4_japif")
 script = ExtResource("5_y8x4g")
 
 [node name="Cursor" type="Node2D" parent="TurnOrder/PlayerCommander"]
+z_index = 1
 script = ExtResource("6_38ulj")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TurnOrder/PlayerCommander/Cursor"]
@@ -188,6 +189,7 @@ offset_bottom = 78.0
 text = "Selected: "
 
 [node name="Movement_popup" type="PopupMenu" parent="."]
+visible = true
 script = ExtResource("14_x12jx")
 
 [connection signal="round_ended" from="TurnOrder" to="." method="_on_round_ended"]

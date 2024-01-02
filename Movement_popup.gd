@@ -8,7 +8,7 @@ func _ready():
 func add_menu_items():
 	add_item("Attack", 0)  # Add an item with label "Attack" and ID 0
 	add_item("Item", 1)    # Add an item with label "Item" and ID 1
-	add_item("Cancel", 2)  # Add an item with label "Cancel" and ID 2
+	add_item("Wait", 2)  # Add an item with label "Cancel" and ID 2
 	
 func _on_item_selected(id):
 	match id:
@@ -20,7 +20,7 @@ func _on_item_selected(id):
 			_on_cancel_selected()
 
 func _on_attack_selected():
-	Cursor_ref.selection_phase=true
+	Cursor_ref.attack_phase=true
 	print("Attack selected")
 
 func _on_inventory_selected():
@@ -29,4 +29,4 @@ func _on_inventory_selected():
 
 func _on_cancel_selected():
 	Cursor_ref.selection_phase=true
-	print("Cancel selected")
+	print("Wait selected")

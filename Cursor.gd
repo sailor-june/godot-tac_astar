@@ -6,29 +6,46 @@ var move_threshold = 0.01
 var grid_size = 64
 var selected_char = null
 signal selected(agent: Node2D)
-@onready var selection_phase = true
+@onready var enemy_ref = get_node("/root/Main/TurnOrder/EnemyCommander/enemy")
 @onready var tilemap = get_node("/root/Main/theGrid") #reference to tilemap
 var move_point : Vector2 = Vector2.ZERO
+
+
+#switch???? idk there should be a way to ensure only one of these is true at any given time. 
+@onready var selection_phase = true
+@onready var attack_phase = false
+
+
+
+
+
+
+
 
 func _ready():
 	move_point = position
 
 func _process(_delta):
-	# Move cursor towards move point
-	if selection_phase == true:
-		position = position.move_toward(move_point, move_speed * get_process_delta_time())
 
-		# Check if cursor is close enough to the move point to allow input handling
+	if selection_phase == true:
+		
+		position = position.move_toward(move_point, move_speed * get_process_delta_time())
 		if position.distance_to(move_point) <= move_threshold:
 			_handle_input_movement()
 		if Input.is_action_just_pressed("confirm"):
-			if check_cell_occupant(tilemap.local_to_map(position), "player_characters")==true:
-				if selected_char==null:
+			if selected_char==null:
+				if check_cell_occupant(tilemap.local_to_map(position), "player_characters")==true:
 					select_character_at_cursor()
 					
 			else:
 				try_move_selected_character(tilemap.map_to_local(position))
-
+	if attack_phase == true:
+		var enemy_cells = get_enemies_in_range(tilemap.local_to_map(position),"Enemies")
+		print(enemy_cells)
+		position = tilemap.map_to_local(enemy_cells[0])
+		attack_phase= false
+		selection_phase = true
+		
 func _handle_input_movement():
 	if not visible:
 		return
@@ -55,24 +72,31 @@ func _handle_input_movement():
 	var map_position = tilemap.local_to_map(move_point)
 	move_point = tilemap.map_to_local(map_position)
 	
+	
 func try_move_selected_character(target):
 	var empty_cell = true
 	var cursor_position = tilemap.local_to_map(position)  # Read the cursor position
-	
+
 	if selected_char != null:
 		var valid_cells = get_cells_in_range(selected_char)
+		if check_cell_occupant(cursor_position,"Enemies"):
+			print("cell ", cursor_position, "is occupied by an enemy unit!")
+			return false
+		if cursor_position == tilemap.local_to_map(selected_char.position):
+			selected_char=null
+			selection_phase = false
+			selected.emit(selected_char)	
+			show_menu_at_position(position)
+			return true
 		if cursor_position in valid_cells:
-			if check_cell_occupant(cursor_position)==false:
-				#this last check might be redundant but its not hurting for now so idk
-				selection_phase = false
-				selected_char.move_to(cursor_position)
-				#await move_complete()
-				await selected_char.move_completed
-				selected_char=null
-				selected.emit(selected_char)	
-				show_menu_at_position(position)
-			else: 
-				print ("cell ",cursor_position, " is occupied!")
+			selection_phase = false
+			selected_char.move_to(cursor_position)
+			#await move_complete()
+			await selected_char.move_completed
+			selected_char=null
+			selected.emit(selected_char)	
+			show_menu_at_position(position)
+
 		else:
 			print ("beyond range")
 		
@@ -113,14 +137,36 @@ func select_character_at_cursor() -> void:
 			break
 			
 			
+	
+	
+	
+func get_enemies_in_range(target, team):
+	
+	#this works for now until we add ranged attacks
+	var cells_in_range = [
+		Vector2i(target.x - 1, target.y),  # Left
+		Vector2i(target.x, target.y - 1),  # Up
+		Vector2i(target.x + 1, target.y),  # Right
+		Vector2i(target.x, target.y + 1)   # Down
+	]
+	var valid_cells = []
+	
+
+
+	for pos in cells_in_range:
+		# Check if there's an enemy at the adjacent position
+		if check_cell_occupant(pos, team):
+			valid_cells.append(pos)
+	return valid_cells
+
 			
 
-func check_for_enemies_around(position, team):
+func check_for_enemies_around(target, team):
 	var adjacent_positions = [
-		Vector2i(position.x - 1, position.y),  # Left
-		Vector2i(position.x, position.y - 1),  # Up
-		Vector2i(position.x + 1, position.y),  # Right
-		Vector2i(position.x, position.y + 1)   # Down
+		Vector2i(target.x - 1, target.y),  # Left
+		Vector2i(target.x, target.y - 1),  # Up
+		Vector2i(target.x + 1, target.y),  # Right
+		Vector2i(target.x, target.y + 1)   # Down
 	]
 
 	var enemies_present = false
